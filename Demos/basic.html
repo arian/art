@@ -6,6 +6,7 @@
 
 	<script src="../ART.js"></script>
 	<script src="Fx.ART.js"></script>
+	<script src="ART.Shapes.Extra.js"></script>
 
 	<script>
 
@@ -16,12 +17,23 @@
 		// Adopt the ART instance into the body
 		$(document.body).adopt(art);
 
-		var rect = new ART.Rectangle(300, 200, 10);
-		rect.fill('black');
-		rect.inject(art);
+		var tri = new ART.Triangle(100, 100).fill('green').inject(art);
 
-		var circle = new ART.Ellipse(200, 200);
-		circle.fill('red').move(20, 20).inject(art);
+		var rect = new ART.Rectangle(300, 200, 10);
+		rect.fill('black')
+			.fillImage('mootools.png', 184, 46)
+			.stroke('#1a2b3c', 10)
+			.inject(art);
+
+		var ellipse = new ART.Ellipse(200, 100);
+		ellipse.fill('red').move(20, 20).inject(art);
+
+		var circle = new ART.Circle(50);
+		circle.fill('blue')
+			.move(50, 50)
+			.blend(0.5)
+			.indicate('hand', 'Howdy!')
+			.inject(art);
 
 		// Create Fx.ART instance
 		var fx = new Fx.ART(rect, {link: 'chain'});
@@ -35,6 +47,9 @@
 		}).start({
 			rotateTo: [40, 100]
 		});
+
+		var star = new ART.Star(50);
+		star.fill('yellow').move(100, 100).inject(art);
 
 	});
 
