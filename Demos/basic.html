@@ -19,10 +19,11 @@
 
 		var tri = new ART.Triangle(100, 100).fill('green').inject(art);
 
-		var rect = new ART.Rectangle(300, 200, 10);
+		var rect = new ART.Rectangle(184, 46, 10);
 		rect.fill('black')
 			.fillImage('mootools.png', 184, 46)
 			.stroke('#1a2b3c', 10)
+			.scaleTo(1)
 			.inject(art);
 
 		var ellipse = new ART.Ellipse(200, 100);
@@ -37,19 +38,29 @@
 
 		// Create Fx.ART instance
 		var fx = new Fx.ART(rect, {link: 'chain'});
-		fx.start({
-			moveTo: [[20, 20], [200, 50]],
-			rotateTo: [0, 40]
-		}).start({
-			scaleTo: [1, 0.5]
-		}).start({
-			scaleTo: [0.5, 1]
-		}).start({
-			rotateTo: [40, 100]
-		});
 
 		var star = new ART.Star(50);
-		star.fill('yellow').move(100, 100).inject(art);
+		star.fill('yellow')
+			.move(50, 50)
+			.inject(art);
+
+		var unsubscribe = star.subscribe('click', function(){
+			fx.start({
+				moveTo: [[20, 20], [200, 50]],
+				rotateTo: [0, 40]
+			}).start({
+				scaleTo: [1, 0.5]
+			}).start({
+				scaleTo: [0.5, 0.9],
+				rotateTo: [40, 180],
+				moveTo: [[200, 50], [300, 200]]
+			});
+		});
+
+		var clickmeText = new ART.Text('Click the star', 'Moderna');
+		clickmeText.fill('black')
+			.move(60, 90)
+			.inject(art);
 
 	});
 

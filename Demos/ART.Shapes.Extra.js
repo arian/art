@@ -53,15 +53,15 @@ ART.Star = new Class({
 			sa = (startAngle || 270) * pi / 180,
 			path = new ART.Path;
 
-		path.move(ro * Math.cos(sa), ro * Math.sin(sa));
+		path.move(ro * (Math.cos(sa) + 1), ro * (Math.sin(sa) + 1));
 
 		for (var i = 0; i < points; i++){
 			path.lineTo(
-				ri * Math.cos(a * (i + 0.5) + sa),
-				ri * Math.sin(a * (i + 0.5) + sa)
+				ri * Math.cos(a * (i + 0.5) + sa) + ro,
+				ri * Math.sin(a * (i + 0.5) + sa) + ro
 			).lineTo(
-				ro * Math.cos(a * (i + 1) + sa),
-				ro * Math.sin(a * (i + 1) + sa)
+				ro * Math.cos(a * (i + 1) + sa) + ro,
+				ro * Math.sin(a * (i + 1) + sa) + ro
 			);
 		}
 
