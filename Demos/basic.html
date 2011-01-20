@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>ART DEMO</title>
+
+	<script src="../ART.js"></script>
+	<script src="Fx.ART.js"></script>
+
+	<script>
+
+	window.addEvent('domready', function(){
+
+		// Creates a new ART instance
+		var art = new ART(500, 500);
+		// Adopt the ART instance into the body
+		$(document.body).adopt(art);
+
+		var rect = new ART.Rectangle(300, 200, 10);
+		rect.fill('black');
+		rect.inject(art);
+
+		var circle = new ART.Ellipse(200, 200);
+		circle.fill('red').move(20, 20).inject(art);
+
+		// Create Fx.ART instance
+		var fx = new Fx.ART(rect, {link: 'chain'});
+		fx.start({
+			moveTo: [[20, 20], [200, 50]],
+			rotateTo: [0, 40]
+		}).start({
+			scaleTo: [1, 0.5]
+		}).start({
+			scaleTo: [0.5, 1]
+		}).start({
+			rotateTo: [40, 100]
+		});
+
+	});
+
+	</script>
+
+</head>
+
+<body>
+</body>
+
+</html>
