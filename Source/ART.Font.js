@@ -17,7 +17,7 @@ ART.registerFont = function(font){
 	    family = face['font-family'],
 	    weight = (face['font-weight'] > 400 ? 'bold' : 'normal'),
 	    style = (face['font-stretch'] == 'oblique' ? 'italic' : 'normal');
-	fonts[weight + style + name] = font;
+	fonts[([weight, style, family].join(',')).toLowerCase()] = font;
 	return this;
 };
 
@@ -65,7 +65,7 @@ ART.Font = new Class({
 			style = font.fontStyle || font['font-style'] || 'normal',
 			size = parseFloat(font.fontSize || font['font-size'] || font.size || 12);
 
-		font = font.glyphs ? font : fonts[weight + style + name];
+		font = font.glyphs ? font : fonts[([weight, style, family].join(',')).toLowerCase()];
 
 		if (!font) throw new Error('The specified font has not been found.');
 		size = size / font.face['units-per-em'];
