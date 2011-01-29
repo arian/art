@@ -33,7 +33,7 @@ var VMLToSVG = function(path, s, x, y){
 			case 'x': end += 'z'; break;
 		}
 	}
-	
+
 	return end;
 };
 
@@ -49,27 +49,27 @@ var parseFontString = function(font){
 };
 
 ART.Font = new Class({
-	
+
 	Extends: ART.Shape,
-	
+
 	initialize: function(text, font){
 		this.parent();
 		if (text != null && font != null) this.draw(text, font);
 	},
-	
+
 	draw: function(text, font){
 		if (typeof font == 'string') font = parseFontString(font);
-		
+
 		var family = font.fontFamily || font['font-family'],
 			weight = font.fontWeight || font['font-weight'] || 'normal',
 			style = font.fontStyle || font['font-style'] || 'normal',
-			size = parseFloat(font.fontSize || font['font-size'] || font.size);
-		
+			size = parseFloat(font.fontSize || font['font-size'] || font.size || 12);
+
 		font = font.glyphs ? font : fonts[weight + style + name];
-		
+
 		if (!font) throw new Error('The specified font has not been found.');
 		size = size / font.face['units-per-em'];
-		
+
 		var width = 0, height = size * font.face.ascent, path = '';
 
 		for (var i = 0, l = text.length; i < l; ++i){
@@ -78,9 +78,9 @@ ART.Font = new Class({
 			if (glyph.d) path += VMLToSVG('m' + glyph.d + 'x', size, width, height);
 			width += w;
 		}
-		
+
 		height -= size * font.face.descent;
-		
+
 		return this.parent(path, width, height);
 	}
 
