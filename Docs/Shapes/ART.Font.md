@@ -49,6 +49,30 @@ ART.Font method: constructor
 
 * When using a string to specifiy the font, the order of font-weight, font-size and font-family is important: first font-weight then size and family.
 
+
+ART.Font method: draw {#ART-Font:draw}
+--------------------------------------
+
+Draws the text (again).
+
+### Syntax:
+
+	font.draw(text, font);
+
+### Arguments:
+
+1. text - (*string*) The text you would like to display.
+2. font - (*string*, *object*) The font that will be used. This can be an string or an object, see examples.
+
+### Returns:
+
+* ART.Font instance
+
+### Note:
+
+- If there was already a text drawn, the `draw` method will remove that and draw the new text.
+
+
 Function: ART.registerFont {#ART-Font:ART-registerFont}
 -------------------------------------------------------
 

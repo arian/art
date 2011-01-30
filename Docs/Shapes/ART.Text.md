@@ -48,6 +48,30 @@ ART.Text method: constructor
 You may use [ART.Font][] instead.
 
 
+ART.Text method: draw {#ART-Text:draw}
+--------------------------------------
+
+Draws the text (again).
+
+### Syntax:
+
+	font.draw(text[, font, alignment, path]);
+
+### Arguments:
+
+1. text - (*string*) The text you would like to display
+2. font - (*string*, *object*, optional) The font that will be used. It can be a CSS font decleration or an object with the declarations, see examples
+3. alignment - (*string*, optional) The allignment of the text, possible values are 'left', 'right' or 'center'.
+4. path - (*ART.Path*, optional) An [ART.Path][] instance to draw the text on a certain path.
+
+### Returns:
+
+* ART.Text instance
+
+### Note:
+
+- If there was already a text drawn, the `draw` method will remove that and draw the new text.
+
 [ART.Shape]: ../ART/ART.Shape
 [ART.Font]: ART.Font
 [VML]: ../Modes/ART.VML
