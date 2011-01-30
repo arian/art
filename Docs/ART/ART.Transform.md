@@ -105,6 +105,7 @@ This is typically used to reset the transform of a shape to some absolute value.
 	instance.transformTo([xx, yx, xy, yy[, x, y]]);
 	instance.transformTo([transform]);
 
+
 ART.Transform method: move {#ART-Transform:move}
 ------------------------------------------------
 
@@ -123,6 +124,7 @@ Moves the origin x/y units in the horizontal/vertical direction.
 
 * The current ART.Transform instance or shape
 
+
 ART.Transform method: moveTo {#ART-Transform:moveTo}
 ----------------------------------------------------
 
@@ -140,6 +142,127 @@ Moves the origin to an absolute point.
 ### Returns:
 
 * The current ART.Transform instance or shape
+
+
+ART.Transform method: scale {#ART-Transform:scale}
+----------------------------------------------------
+
+Scales the size of an ART object relative to the current size.
+
+### Syntax:
+
+	transform.scale(x, y);
+
+### Arguments:
+
+1. x - (*number*) Scaling along the horizontal axis
+2. y - (*number*) Scaling along the vertical axis.
+
+### Returns:
+
+* The current ART.Transform instance or shape
+
+### Examples:
+
+	// The scaled rectangle will be 100px wide and 150px high
+	new ART.Rectangle(50, 50).scale(2, 3);
+
+
+ART.Transform method: scaleTo {#ART-Transform:scaleTo}
+------------------------------------------------------
+
+Scales the size of an ART object relative to the original size.
+
+### Syntax:
+
+	transform.scaleTo(x, y);
+
+### Arguments:
+
+1. x - (*number*) Scaling along the horizontal axis
+2. y - (*number*) Scaling along the vertical axis.
+
+### Returns:
+
+* The current ART.Transform instance or shape
+
+
+ART.Transform method: rotate {#ART-Transform:rotate}
+----------------------------------------------------
+
+Rotates an ART object relative to the current rotation.
+
+### Syntax:
+
+	transform.rotate(deg[, x, y]);
+
+### Arguments:
+
+1. deg - (*number*) The number of degrees of rotation
+2. x - (*number*, optional) The x-point that will be rotated about, relative to the obect's origin.
+3. y - (*number*, optional) The y-point that will be rotated about, relative to the obect's origin.
+
+### Returns:
+
+* The current ART.Transform instance or shape
+
+### Examples:
+
+	var rect = new ART.Rectangle(100, 50);
+	rect.rotate(45); // rotates the rectangle 45 degrees
+
+	var rect = new ART.Rectangle(100, 50);
+	rect.rotate(45, 50, 25); // rotates the rectangle 45 degrees about the middlepoint of the rectangle
+
+
+ART.Transform method: rotateTo {#ART-Transform:rotateTo}
+--------------------------------------------------------
+
+Rotates an ART object relative to the original rotation.
+
+### Syntax:
+
+	transform.rotateTo(deg[, x, y]);
+
+### Arguments:
+
+1. deg - (*number*) The number of degrees of rotation
+2. x - (*number*, optional) The x-point that will be rotated about, relative to the obect's origin.
+3. y - (*number*, optional) The y-point that will be rotated about, relative to the obect's origin.
+
+### Returns:
+
+* The current ART.Transform instance or shape
+
+
+ART.Transform method: resizeTo {#ART-Transform:resizeTo}
+--------------------------------------------------------
+
+Resize an ART object.
+
+### Syntax:
+
+	transform.resizeTo(x, y);
+
+### Arguments:
+
+1. x - (*number*) The new width in pixels
+2. y - (*number*) The new height in pixels
+
+### Returns:
+
+* The current ART.Transform instance or shape
+
+### Example:
+
+	var rect = new ART.Rectangle(300, 200);
+	rect.resize(500, 100);
+
+
+ART.Transform method: point {#ART-Transform:point}
+--------------------------------------------------
+
+// Write me
 
 
 [ART.Shape]: ART.Shape
