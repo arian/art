@@ -30,10 +30,10 @@ ART.Text method: constructor
 
 	// Uses an object to specify the font
 	var text = new ART.Text('some text', {
-		'font-family': 'sans-serif',
-		'font-size': '20px',
-		'font-weight: 'bold',
-		'font-style': 'italic'
+		fontFamily: 'sans-serif',
+		fontSize: '20px',
+		fontWeight: 'bold',
+		fontStyle: 'italic'
 	});
 
 	// Draw the text on a path

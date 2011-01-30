@@ -39,12 +39,15 @@ ART.Font method: constructor
 
 	// Using an object to define the font
 	var text = new ART.Font('I am some ART.Font Text', {
-		family: 'moderna',
-		weight: 'bold',
-		style: 'normal',
-		size: '20px'
+		fontFamily: 'moderna',
+		fontWeight: 'bold',
+		fontStyle: 'normal',
+		fontSize: '20px'
 	});
 
+### Note:
+
+* When using a string to specifiy the font, the order of font-weight, font-size and font-family is important: first font-weight then size and family.
 
 Function: ART.registerFont {#ART-Font:ART-registerFont}
 -------------------------------------------------------
