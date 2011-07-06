@@ -138,12 +138,12 @@ ART.SVG.Base = new Class({
 	
 	/* insertions */
 	
-	inject: function(container){
+	inject: function(container, where){
 		this.eject();
 		this.container = container;
 		this._injectBrush('fill');
 		this._injectBrush('stroke');
-		this.parent(container);
+		this.parent(container, where);
 		return this;
 	},
 	
@@ -522,8 +522,8 @@ ART.SVG.Text = new Class({
 	
 	// TODO: Unify path injection with gradients and imagefills
 
-	inject: function(container){
-		this.parent(container);
+	inject: function(container, where){
+		this.parent(container, where);
 		this._injectPaths();
 		return this;
 	},

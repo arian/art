@@ -14,13 +14,35 @@ this.ART = new Class;
 ART.version = '09.dev';
 ART.build = 'DEV';
 
+ART.Inserters = {
+
+	before: function(context, element){
+		var parent = element.parentNode;
+		if (parent) parent.insertBefore(context, element);
+	},
+
+	after: function(context, element){
+		var parent = element.parentNode;
+		if (parent) parent.insertBefore(context, element.nextSibling);
+	},
+
+	bottom: function(context, element){
+		element.appendChild(context);
+	},
+
+	top: function(context, element){
+		element.insertBefore(context, element.firstChild);
+	}
+
+};
+
 ART.Element = new Class({
 
 	/* dom */
 
-	inject: function(element){
+	inject: function(element, where){
 		if (element.element) element = element.element;
-		element.appendChild(this.element);
+		ART.Inserters[where || 'bottom'](this.element, element);
 		return this;
 	},
 

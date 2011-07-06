@@ -29,12 +29,12 @@ ART.VML = new Class({
 		if (width != null && height != null) this.resize(width, height);
 	},
 	
-	inject: function(element){
+	inject: function(element, where){
 		if (element.element) element = element.element;
-		element.appendChild(this.vml);
+		ART.Inserters[where || 'bottom'](this.vml, element);
 		return this;
 	},
-	
+
 	resize: function(width, height){
 		this.width = width;
 		this.height = height;
@@ -108,12 +108,12 @@ ART.VML.Element = new Class({
 	
 	/* dom */
 	
-	inject: function(container){
+	inject: function(container, where){
 		this.eject();
 		this.container = container;
 		container.children.include(this);
 		this._transform();
-		this.parent(container);
+		this.parent(container, where);
 		
 		return this;
 	},
@@ -165,8 +165,8 @@ ART.VML.Group = new Class({
 	
 	/* dom */
 	
-	inject: function(container){
-		this.parent(container);
+	inject: function(container, where){
+		this.parent(container, where);
 		this._transform();
 		return this;
 	},
