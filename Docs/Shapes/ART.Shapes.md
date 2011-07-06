@@ -38,23 +38,37 @@ Creates a pill shape where the smaller side is entirely rounded.
 ART.Pill method: constructor
 ----------------------------
 
+Creates a pill shaped element.
+
 ### Syntax:
 
 	var myRectangle = new ART.Pill(width, height);
 
 ### Arguments:
 
-1. width - (*number*) The width of the rectangle in pixels
-2. height - (*number*) The height of the rectangle in pixels
+1. width - (*number*) The width of the pill in pixels
+2. height - (*number*) The height of the pill in pixels
 
 
 
-ART.Ellipse
-===========
+ART.Ellipse {#ART-Ellipse}
+==========================
 
 
-ART.Wedge
-=========
+### Syntax:
+
+	var myEllipse = new ART.Ellipse(width, height);
+
+### Arguments:
+
+1. width - (*number*) The width of the ellipse in pixels
+2. height - (*number*) The height of the ellipse in pixels
+
+
+
+
+ART.Wedge {#ART-Wedge}
+======================
 
 
 
