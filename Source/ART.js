@@ -199,6 +199,10 @@ ART.Transform = new Class({
 		return this.scale(x, y);
 	},
 
+	resize: function(width, height){
+		return this.resizeTo(this.width * this.xx + width, this.height * this.yy + height);
+	},
+
 	resizeTo: function(width, height){
 		var w = this.width, h = this.height;
 		if (!w || !h) return this;
