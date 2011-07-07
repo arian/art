@@ -194,16 +194,8 @@ ART.Transform = new Class({
 	},
 
 	scaleTo: function(x, y, keepCenter){
-		// Normalize
 		var m = this;
-
-		var h = Math.sqrt(m.xx * m.xx + m.yx * m.yx);
-		m.xx /= h; m.yx /= h;
-
-		h = Math.sqrt(m.yy * m.yy + m.xy * m.xy);
-		m.yy /= h; m.xy /= h;
-
-		return this.scale(x, y, keepCenter);
+		return this.scale(x / m.xx, y / m.yy, keepCenter);
 	},
 
 	resizeTo: function(width, height){
