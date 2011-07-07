@@ -148,9 +148,12 @@ ART.Transform = new Class({
 		return this;
 	},
 
-	scale: function(x, y){
+	scale: function(x, y, keepCenter){
 		if (y == null) y = x;
-		return this.transform(x, 0, 0, y, 0, 0);
+		var xx = this.xx, yy = this.yy;
+		this.transform(x, 0, 0, y, 0, 0);
+		if (keepCenter) this.move((xx - this.xx) * this.width / 2, (yy - this.yy) * this.height / 2);
+		return this;
 	},
 
 	rotate: function(deg, x, y){
@@ -186,7 +189,7 @@ ART.Transform = new Class({
 		return this.rotate(deg - Math.atan2(flip * m.yx, flip * m.xx) * 180 / Math.PI, x, y);
 	},
 
-	scaleTo: function(x, y){
+	scaleTo: function(x, y, keepCenter){
 		// Normalize
 		var m = this;
 
@@ -196,7 +199,7 @@ ART.Transform = new Class({
 		h = Math.sqrt(m.yy * m.yy + m.xy * m.xy);
 		m.yy /= h; m.xy /= h;
 
-		return this.scale(x, y);
+		return this.scale(x, y, keepCenter);
 	},
 
 	resize: function(width, height){
