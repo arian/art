@@ -177,6 +177,10 @@ ART.Transform = new Class({
 		).transform(1, 0, 0, 1, -x, -y);
 	},
 
+	resize: function(width, height){
+		return this.resizeTo(this.width * this.xx + width, this.height * this.yy + height);
+	},
+
 	moveTo: function(x, y){
 		var m = this;
 		return this.transformTo(m.xx, m.yx, m.xy, m.yy, x, y);
@@ -200,10 +204,6 @@ ART.Transform = new Class({
 		m.yy /= h; m.xy /= h;
 
 		return this.scale(x, y, keepCenter);
-	},
-
-	resize: function(width, height){
-		return this.resizeTo(this.width * this.xx + width, this.height * this.yy + height);
 	},
 
 	resizeTo: function(width, height){
