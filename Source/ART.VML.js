@@ -20,7 +20,7 @@ ART.VML = new Class({
 
 	Extends: ART.Element,
 	Implements: ART.Container,
-	
+
 	initialize: function(width, height){
 		this.vml = document.createElement('vml');
 		this.element = document.createElement('av:group');
@@ -28,37 +28,37 @@ ART.VML = new Class({
 		this.children = [];
 		if (width != null && height != null) this.resize(width, height);
 	},
-	
+
 	inject: function(element){
 		if (element.element) element = element.element;
 		element.appendChild(this.vml);
 		return this;
 	},
-	
+
 	resize: function(width, height){
 		this.width = width;
 		this.height = height;
-		
+
 		var style = this.vml.style;
 		style.pixelWidth = width;
 		style.pixelHeight = height;
-		
+
 		style = this.element.style;
 		style.width = width;
 		style.height = height;
-		
+
 		var halfPixel = (0.5 * precision);
-		
+
 		this.element.coordorigin = halfPixel + ',' + halfPixel;
 		this.element.coordsize = (width * precision) + ',' + (height * precision);
 
 		return this;
 	},
-	
+
 	toElement: function(){
 		return this.vml;
 	}
-	
+
 });
 
 // VML Initialization
@@ -92,12 +92,14 @@ ART.VML.init = function(document){
 
 // VML Element Class
 
+var reAlpha = /alpha\(opacity=([\d.]+)\)/i;
+
 ART.VML.Element = new Class({
-	
+
 	Extends: ART.Element,
-	
+
 	Implements: ART.Transform,
-	
+
 	initialize: function(tag){
 		this.uid = String.uniqueID();
 		if (!(tag in styledTags)) styleTag(tag);
@@ -105,16 +107,16 @@ ART.VML.Element = new Class({
 		var element = this.element = document.createElement('av:' + tag);
 		element.setAttribute('id', 'e' + this.uid);
 	},
-	
+
 	/* dom */
-	
+
 	inject: function(container){
 		this.eject();
 		this.container = container;
 		container.children.include(this);
 		this._transform();
 		this.parent(container);
-		
+
 		return this;
 	},
 
@@ -127,20 +129,30 @@ ART.VML.Element = new Class({
 		return this;
 	},
 
+	// transforms
+
+	blend: function(opacity){
+		opacity = (opacity * 100).limit(0, 100).round();
+		opacity = (opacity == 100) ? '' : 'alpha(opacity=' + opacity + ')';
+		var element = this.element, filter = element.style.filter;
+		element.style.filter = reAlpha.test(filter) ? filter.replace(reAlpha, opacity) : filter + opacity;
+		return this;
+	},
+
 	// visibility
-	
+
 	hide: function(){
 		this.element.style.display = 'none';
 		return this;
 	},
-	
+
 	show: function(){
 		this.element.style.display = '';
 		return this;
 	},
-	
+
 	// interaction
-	
+
 	indicate: function(cursor, tooltip){
 		if (cursor) this.element.style.cursor = cursor;
 		if (tooltip) this.element.title = tooltip;
@@ -152,30 +164,30 @@ ART.VML.Element = new Class({
 // VML Group Class
 
 ART.VML.Group = new Class({
-	
+
 	Extends: ART.VML.Element,
 	Implements: ART.Container,
-	
+
 	initialize: function(width, height){
 		this.parent('group');
 		this.width = width;
 		this.height = height;
 		this.children = [];
 	},
-	
+
 	/* dom */
-	
+
 	inject: function(container){
 		this.parent(container);
 		this._transform();
 		return this;
 	},
-	
+
 	eject: function(){
 		this.parent();
 		return this;
 	},
-	
+
 	_transform: function(){
 		var element = this.element;
 		element.coordorigin = '0,0';
@@ -185,7 +197,7 @@ ART.VML.Group = new Class({
 		element.style.width = 1000;
 		element.style.height = 1000;
 		element.style.rotation = 0;
-		
+
 		var container = this.container;
 		this._activeTransform = container ? new ART.Transform(container._activeTransform).transform(this) : this;
 		var children = this.children;
@@ -200,11 +212,11 @@ ART.VML.Group = new Class({
 ART.VML.Base = new Class({
 
 	Extends: ART.VML.Element,
-	
+
 	initialize: function(tag){
 		this.parent(tag);
 		var element = this.element;
-		
+
 		var skew = this.skewElement = document.createElement('av:skew');
 		skew.on = true;
 		element.appendChild(skew);
@@ -212,42 +224,42 @@ ART.VML.Base = new Class({
 		var fill = this.fillElement = document.createElement('av:fill');
 		fill.on = false;
 		element.appendChild(fill);
-		
+
 		var stroke = this.strokeElement = document.createElement('av:stroke');
 		stroke.on = false;
 		element.appendChild(stroke);
 	},
-	
+
 	/* transform */
-	
+
 	_transform: function(){
 		var container = this.container;
-		
+
 		// Active Transformation Matrix
 		var m = container ? new ART.Transform(container._activeTransform).transform(this) : this;
-		
+
 		// Box in shape user space
-		
+
 		var box = this._boxCoords || this._size || defaultBox;
-		
+
 		var originX = box.left || 0,
 			originY = box.top || 0,
 			width = box.width || 1,
 			height = box.height || 1;
-				
+
 		// Flipped
 	    var flip = m.yx / m.xx > m.yy / m.xy;
 		if (m.xx < 0 ? m.xy >= 0 : m.xy < 0) flip = !flip;
 		flip = flip ? -1 : 1;
-		
+
 		m = new ART.Transform().scale(flip, 1).transform(m);
-		
+
 		// Rotation is approximated based on the transform
 		var rotation = Math.atan2(-m.xy, m.yy) * 180 / Math.PI;
-		
+
 		// Reverse the rotation, leaving the final transform in box space
 		var rad = rotation * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
-		
+
 		var transform = new ART.Transform(
 			(m.xx * cos - m.xy * sin),
 			(m.yx * cos - m.yy * sin) * flip,
@@ -262,43 +274,43 @@ ART.VML.Base = new Class({
 		// Scale box after reversing rotation
 		width *= Math.abs(shapeToBox.xx);
 		height *= Math.abs(shapeToBox.yy);
-		
+
 		// Place box
 		var left = m.x, top = m.y;
-		
+
 		// Compensate for offset by center origin rotation
 		var vx = -width / 2, vy = -height / 2;
 		var point = rotationTransform.point(vx, vy);
 		left -= point.x - vx;
 		top -= point.y - vy;
-		
+
 		// Adjust box position based on offset
 		var rsm = new ART.Transform(m).moveTo(0,0);
 		point = rsm.point(originX, originY);
 		left += point.x;
 		top += point.y;
-		
+
 		if (flip < 0) left = -left - width;
-		
+
 		// Place transformation origin
 		var point0 = rsm.point(-originX, -originY);
 		var point1 = rotationTransform.point(width, height);
 		var point2 = rotationTransform.point(width, 0);
 		var point3 = rotationTransform.point(0, height);
-		
+
 		var minX = Math.min(0, point1.x, point2.x, point3.x),
 		    maxX = Math.max(0, point1.x, point2.x, point3.x),
 		    minY = Math.min(0, point1.y, point2.y, point3.y),
 		    maxY = Math.max(0, point1.y, point2.y, point3.y);
-		
+
 		var transformOriginX = (point0.x - point1.x / 2) / (maxX - minX) * flip,
 		    transformOriginY = (point0.y - point1.y / 2) / (maxY - minY);
-		
+
 		// Adjust the origin
 		point = shapeToBox.point(originX, originY);
 		originX = point.x;
 		originY = point.y;
-		
+
 		// Scale stroke
 		var strokeWidth = this._strokeWidth;
 		if (strokeWidth){
@@ -307,7 +319,7 @@ ART.VML.Base = new Class({
 			var vx = m.xx + m.xy, vy = m.yy + m.yx;
 			strokeWidth *= Math.sqrt(vx * vx + vy * vy) / Math.sqrt(2);
 		}
-		
+
 		// convert to multiplied precision space
 		originX *= precision;
 		originY *= precision;
@@ -315,7 +327,7 @@ ART.VML.Base = new Class({
 		top *= precision;
 		width *= precision;
 		height *= precision;
-		
+
 		// Set box
 		var element = this.element;
 		element.coordorigin = originX + ',' + originY;
@@ -326,7 +338,7 @@ ART.VML.Base = new Class({
 		element.style.height = height;
 		element.style.rotation = rotation.toFixed(8);
 		element.style.flip = flip < 0 ? 'x' : '';
-		
+
 		// Set transform
 		var skew = this.skewElement;
 		skew.matrix = [transform.xx.toFixed(4), transform.xy.toFixed(4), transform.yx.toFixed(4), transform.yy.toFixed(4), 0, 0];
@@ -335,7 +347,7 @@ ART.VML.Base = new Class({
 		// Set stroke
 		this.strokeElement.weight = strokeWidth + 'px';
 	},
-	
+
 	/* styles */
 
 	_createGradient: function(style, stops){
@@ -360,10 +372,10 @@ ART.VML.Base = new Class({
 		// Enumerate stops, assumes offsets are enumerated in order
 		if ('length' in stops) for (var i = 0, l = stops.length - 1; i <= l; i++) addColor(i / l, stops[i]);
 		else for (var offset in stops) addColor(offset, stops[offset]);
-		
+
 		fill.color = color1[0];
 		fill.color2 = color2[0];
-		
+
 		//if (fill.colors) fill.colors.value = colors; else
 		fill.colors = colors;
 
@@ -375,7 +387,7 @@ ART.VML.Base = new Class({
 		this.element.appendChild(fill);
 		return fill;
 	},
-	
+
 	_setColor: function(type, color){
 		var element = this[type + 'Element'];
 		if (color == null){
@@ -387,7 +399,7 @@ ART.VML.Base = new Class({
 			element.on = true;
 		}
 	},
-	
+
 	fill: function(color){
 		if (arguments.length > 1){
 			this.fillLinear(arguments);
@@ -411,10 +423,10 @@ ART.VML.Base = new Class({
 		if (radiusX == null) radiusX = this.width * 0.5;
 		if (centerX == null) centerX = focusX;
 		if (centerY == null) centerY = focusY;
-		
+
 		centerX += centerX - focusX;
 		centerY += centerY - focusY;
-		
+
 		var box = this._boxCoords = {
 			left: centerX - radiusX * 2,
 			top: centerY - radiusY * 2,
@@ -429,9 +441,9 @@ ART.VML.Base = new Class({
 		fill.focussize = '0 0';
 		fill.focusposition = focusX + ',' + focusY;
 		fill.focus = '50%';
-		
+
 		this._transform();
-		
+
 		return this;
 	},
 
@@ -475,7 +487,7 @@ ART.VML.Base = new Class({
 		if (fill.colors) fill.colors.value = '';
 		fill.rotate = true;
 		fill.src = url;
-		
+
 		fill.size = '1,1';
 		fill.position = '0,0';
 		fill.origin = '0,0';
@@ -490,7 +502,7 @@ ART.VML.Base = new Class({
 	},
 
 	/* stroke */
-	
+
 	stroke: function(color, width, cap, join){
 		var stroke = this.strokeElement;
 		this._strokeWidth = (width != null) ? width : 1;
@@ -509,37 +521,37 @@ ART.VML.Base = new Class({
 ART.VML.Shape = new Class({
 
 	Extends: ART.VML.Base,
-	
+
 	initialize: function(path, width, height){
 		this.parent('shape');
 
 		var p = this.pathElement = document.createElement('av:path');
 		p.gradientshapeok = true;
 		this.element.appendChild(p);
-		
+
 		this.width = width;
 		this.height = height;
-		
+
 		if (path != null) this.draw(path);
 	},
-	
+
 	// SVG to VML
-	
+
 	draw: function(path, width, height){
-		
+
 		if (!(path instanceof ART.Path)) path = new ART.Path(path);
 		this._vml = path.toVML(precision);
 		this._size = path.measure();
-		
+
 		if (width != null) this.width = width;
 		if (height != null) this.height = height;
-		
+
 		if (!this._boxCoords) this._transform();
 		this._redraw(this._prefix, this._suffix);
-		
+
 		return this;
 	},
-	
+
 	// radial gradient workaround
 
 	_redraw: function(prefix, suffix){
@@ -584,7 +596,7 @@ ART.VML.Shape = new Class({
 
 		centerX += centerX - focusX;
 		centerY += centerY - focusY;
-		
+
 		var cx = Math.round(centerX * precision),
 			cy = Math.round(centerY * precision),
 
@@ -605,13 +617,13 @@ ART.VML.Shape = new Class({
 		);
 
 		this._boxCoords = { left: focusX - 2, top: focusY - 2, width: 4, height: 4 };
-		
+
 		fill.focusposition = '0.5,0.5';
 		fill.focussize = '0 0';
 		fill.focus = '50%';
-		
+
 		this._transform();
-		
+
 		return this;
 	}
 
@@ -625,26 +637,26 @@ ART.VML.Text = new Class({
 
 	initialize: function(text, font, alignment, path){
 		this.parent('shape');
-		
+
 		var p = this.pathElement = document.createElement('av:path');
 		p.textpathok = true;
 		this.element.appendChild(p);
-		
+
 		p = this.textPathElement = document.createElement("av:textpath");
 		p.on = true;
 		p.style['v-text-align'] = 'left';
 		this.element.appendChild(p);
-		
+
 		this.draw.apply(this, arguments);
 	},
-	
+
 	draw: function(text, font, alignment, path){
 		var element = this.element,
 		    textPath = this.textPathElement,
 		    style = textPath.style;
-		
+
 		textPath.string = text;
-		
+
 		if (font){
 			if (typeof font == 'string'){
 				style.font = font;
@@ -660,9 +672,9 @@ ART.VML.Text = new Class({
 				}
 			}
 		}
-		
+
 		if (alignment) style['v-text-align'] = fontAnchors[alignment] || alignment;
-		
+
 		if (path){
 			this.currentPath = path = new ART.Path(path);
 			this.element.path = path.toVML(precision);
@@ -672,13 +684,13 @@ ART.VML.Text = new Class({
 			textPath.string = offsetRows + textPath.string;
 			this.element.path = 'm0,0l1,0';
 		}
-		
+
 		// Measuring the bounding box is currently necessary for gradients etc.
-		
+
 		// Clone element because the element is dead once it has been in the DOM
 		element = element.cloneNode(true);
 		style = element.style;
-		
+
 		// Reset coordinates while measuring
 		element.coordorigin = '0,0';
 		element.coordsize = '10000,10000';
@@ -688,29 +700,29 @@ ART.VML.Text = new Class({
 		style.height = '10000px';
 		style.rotation = 0;
 		element.removeChild(element.firstChild); // Remove skew
-		
+
 		// Inject the clone into the document
-		
+
 		var canvas = new ART.VML(1, 1),
 		    group = new ART.VML.Group(), // Wrapping it in a group seems to alleviate some client rect weirdness
 		    body = element.ownerDocument.body;
-		
+
 		canvas.inject(body);
 		group.element.appendChild(element);
 		group.inject(canvas);
-		
+
 		var ebb = element.getBoundingClientRect(),
 		    cbb = canvas.toElement().getBoundingClientRect();
-		
+
 		canvas.eject();
-		
+
 		this.left = ebb.left - cbb.left;
 		this.top = ebb.top - cbb.top;
 		this.width = ebb.right - ebb.left;
 		this.height = ebb.bottom - ebb.top;
 		this.right = ebb.right - cbb.left;
 		this.bottom = ebb.bottom - cbb.top;
-		
+
 		this._transform();
 
 		this._size = { left: this.left, top: this.top, width: this.width, height: this.height};
