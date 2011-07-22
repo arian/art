@@ -647,7 +647,7 @@ ART.VML.Text = new Class({
 		p.style['v-text-align'] = 'left';
 		this.element.appendChild(p);
 
-		this.draw.apply(this, arguments);
+		this.draw.call(this, '' + text, font, alignment, path);
 	},
 
 	draw: function(text, font, alignment, path){
